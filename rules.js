@@ -1,20 +1,18 @@
 // ================== NeoBridge rules engine ==================
-// Fixed rules based on WHO / IMNCI danger signs for young infants.
-// These rules (not the AI) decide GREEN / AMBER / RED.
-// Thresholds are in NB.LIMITS so they are easy to review and change.
+
 
 window.NB = window.NB || {};
 NB.DAY = 86400000;
 
 NB.LIMITS = {
-  coldRed: 35.5,     // below this = too cold (danger sign)
-  coolAmber: 36.5,   // below this = slightly cold, start skin-to-skin
-  hotRed: 37.5,      // this or above = fever (danger sign)
-  fastBreath: 60,    // breaths per minute, this or above = fast breathing
-  beltFreshMs: 2 * 60000 // belt reading counts as "live" for 2 minutes
+  coldRed: 35.5,     
+  coolAmber: 36.5,   
+  hotRed: 37.5,      
+  fastBreath: 60,    
+  beltFreshMs: 2 * 60000 
 };
 
-// Daily check questions. "Yes" always means the danger sign IS present.
+
 NB.SIGNS = [
   { key: 'feeding_poor', en: 'Not feeding well', ta: 'சரியாக பால் குடிக்கவில்லை',
     q_en: 'Is your baby not feeding well, or refusing milk?',
@@ -58,7 +56,7 @@ NB.ADVICE = {
   ]
 };
 
-// Follow-up schedule (SNCU discharge follow-up + eye check + vaccines)
+// Follow-up schedule 
 NB.followUps = function (b, logs, now) {
   now = now || Date.now();
   const birth = NB.parseYmd(b.birthDate), dis = NB.parseYmd(b.dischargeDate);
@@ -80,14 +78,14 @@ NB.followUps = function (b, logs, now) {
   })).sort((a, c) => a.due - c.due);
 };
 
-// Main assessment: returns { level, reasons, score, ... }
+// Main assessment
 NB.assess = function (b, st, now) {
   now = now || Date.now();
   const L = NB.LIMITS, R = [];
   const add = (level, en, ta, code) => R.push({ level, en, ta, code: code || en });
   const logs = Object.values(st.logs || {}).filter(l => l.babyId === b.id);
 
-  // 1) Mother's daily check (last 24 hours)
+  // 1) Mother's daily check 
   const check = logs.filter(l => l.type === 'check').sort((x, y) => y.ts - x.ts)[0];
   const recentCheck = check && now - check.ts < NB.DAY ? check : null;
   if (recentCheck) {
@@ -129,7 +127,7 @@ NB.assess = function (b, st, now) {
 
   const level = R.some(x => x.level === 'RED') ? 'RED' : R.some(x => x.level === 'AMBER') ? 'AMBER' : 'GREEN';
 
-  // Risk score 0-100 (used to sort the ASHA list)
+  // Risk score 0-100 
   let score = 0;
   if (level === 'RED') score += 50;
   score += R.filter(x => x.level === 'RED').length * 10;
