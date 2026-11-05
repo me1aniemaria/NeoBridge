@@ -1,6 +1,4 @@
-// ================== Voice (Tamil / English) + optional Gemini ==================
 // Speech to text and text to speech use the browser's built-in Web Speech API
-// (works best in Chrome, needs internet for speech recognition).
 
 window.NB = window.NB || {};
 NB.voice = (function () {
@@ -51,7 +49,7 @@ NB.voice = (function () {
     } catch (e) {}
   }
 
-  // Optional: Gemini turns the mother's own words into yes / no / null per danger sign.
+  // Gemini turns the mother's own words into yes / no / null per danger sign.
   async function gemini(text) {
     const cfg = window.NB_CONFIG || {};
     if (!cfg.geminiApiKey) return null;
