@@ -1,14 +1,4 @@
 // ================== NeoBelt connection ==================
-// Real belt: Bluetooth Low Energy (Web Bluetooth, Chrome on Android/laptop, https only).
-// Demo belt: fake readings so you can demo before the hardware is ready.
-//
-// PROTOCOL (the ESP32 must match this exactly):
-//   Device name : starts with "NeoBelt"
-//   Service UUID: 6e400001-b5a3-f393-e0a9-e50e24dcca9e
-//   Notify char : 6e400003-b5a3-f393-e0a9-e50e24dcca9e
-//   Every ~2 s the belt sends one short text line:
-//     breaths_per_min,temperature_C,apnea(0/1),pauses_today
-//   Example: "42,36.7,0,0"   (kept under 20 bytes so it fits one BLE packet)
 
 window.NB = window.NB || {};
 NB.belt = (function () {
